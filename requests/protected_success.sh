@@ -1,0 +1,2 @@
+curl -X GET http://localhost:3000/api/protected \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MTEwZWE2ZWU0OGFmZjJkYjJiYWZlYyIsImlhdCI6MTc0NTk0ODk5NSwiZXhwIjoxNzQ1OTUyNTk1fQ.DvEGr1GzDlANNvxzW0PTmYrqW86jxFHdtI7u-qMJNnc"
