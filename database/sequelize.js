@@ -9,7 +9,8 @@ const sequelize = new Sequelize(
     host: process.env.POSTGRES_HOST,
     port: 5432,                     
     dialect: 'postgres',
-    logging: false
+    logging: false,
+    dialectModule: require('pg')
   }
 );
 
