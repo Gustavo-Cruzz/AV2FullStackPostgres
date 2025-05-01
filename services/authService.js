@@ -3,12 +3,22 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const register = async (name, email, password) => {
-  const existingUser = await User.findOne({ where: { email } });
+  if (!password) {
+    throw new Error('A senha não pode estar vazia.');
+  }
+
+  if (!email || !email.includes('@')) {
+    throw new Error('Por favor, insira um e-mail válido.');
+  }
+  
+  const existingUser = await User.findOne({ email });
   if (existingUser) throw new Error('E-mail já registrado');
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await User.create({ name, email, password: hashedPassword });
-  return user;
+  const newUser = new User({ name, email, password: hashedPassword });
+
+  await newUser.save();
+  return newUser;
 };
 
 const login = async (email, password) => {
