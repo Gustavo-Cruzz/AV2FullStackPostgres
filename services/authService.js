@@ -3,18 +3,40 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const register = async (name, email, password) => {
-    
+
+  // --- Validação de E-mail ---
+  if (!email || typeof email !== 'string' || email.trim() === '') {
+    throw new Error('O campo e-mail é obrigatório.');
+  }
+  // Remove espaços extras e converte para minúsculas para consistência
+  const normalizedEmail = email.trim().toLowerCase();
+
+  if (!normalizedEmail.includes('@') || !normalizedEmail.includes('.')) {
+    throw new Error('Por favor, insira um formato de e-mail válido.');
+  }
+
+  // --- Validação de Senha ---
+  if (!password || typeof password !== 'string' || password.trim() === '') {
+    throw new Error('O campo senha é obrigatório.');
+  }
+
   const existingUser = await User.findOne({
     where: {
-      email: email 
+      email: normalizedEmail 
     }
   });
 
-  if (existingUser) throw new Error('E-mail já registrado');
+  if (existingUser) {
+    throw new Error('Este e-mail já está registrado.');
+  }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser = new User({ name, email, password: hashedPassword });
-  await newUser.save();
+
+  const newUser = await User.create({
+    name: name, 
+    email: normalizedEmail, 
+    password: hashedPassword
+  });
 
   return newUser;
 };
